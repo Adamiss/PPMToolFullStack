@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { createProject } from "../../actions/projectActions";
 
 class AddProject extends Component {
   constructor() {
@@ -17,6 +20,14 @@ class AddProject extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  //life cycle hooks
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -30,12 +41,15 @@ class AddProject extends Component {
       start_date: this.state.start_date,
       end_date: this.state.end_date,
     };
+    this.props.createProject(newProject, this.props.history);
     console.log(newProject);
   }
 
   render() {
+    const { errors } = this.state;
     return (
       <div>
+        <h1>{errors.projectName}</h1>
         <div className="project">
           <div className="container">
             <div className="row">
@@ -108,5 +122,13 @@ class AddProject extends Component {
     );
   }
 }
+AddProject.propTypes = {
+  createProject: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
+};
 
-export default AddProject;
+const mapStateToProps = (state) => ({
+  errors: state.errors,
+});
+
+export default connect(null, { createProject })(AddProject);
