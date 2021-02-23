@@ -49,7 +49,6 @@ class AddProject extends Component {
     const { errors } = this.state;
     return (
       <div>
-        <h1>{errors.projectName}</h1>
         <div className="project">
           <div className="container">
             <div className="row">
@@ -68,6 +67,7 @@ class AddProject extends Component {
                       value={this.state.projectName}
                       onChange={this.onChange}
                     />
+                    <p>{errors.projectName}</p>
                   </div>
                   <div className="form-group">
                     <input
@@ -78,6 +78,7 @@ class AddProject extends Component {
                       value={this.state.projectIdentifier}
                       onChange={this.onChange}
                     />
+                    <p>{errors.projectIdentifier}</p>
                   </div>
                   <div className="form-group">
                     <textarea
@@ -87,6 +88,7 @@ class AddProject extends Component {
                       value={this.state.description}
                       onChange={this.onChange}
                     ></textarea>
+                    <p>{errors.description}</p>
                   </div>
                   <h6>Start Date</h6>
                   <div className="form-group">
@@ -131,4 +133,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
 });
 
-export default connect(null, { createProject })(AddProject);
+export default connect(mapStateToProps, { createProject })(AddProject);
