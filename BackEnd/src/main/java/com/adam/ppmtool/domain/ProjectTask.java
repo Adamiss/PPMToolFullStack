@@ -75,6 +75,14 @@ public class ProjectTask {
         this.acceptanceCriteria = acceptanceCriteria;
     }
 
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
+    }
+
     public String getStatus() {
         return status;
     }
