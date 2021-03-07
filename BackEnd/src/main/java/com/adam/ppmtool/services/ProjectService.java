@@ -2,9 +2,12 @@ package com.adam.ppmtool.services;
 
 import com.adam.ppmtool.domain.Backlog;
 import com.adam.ppmtool.domain.Project;
+import com.adam.ppmtool.domain.ProjectTask;
 import com.adam.ppmtool.exceptions.ProjectIdException;
 import com.adam.ppmtool.repositories.BacklogRepository;
 import com.adam.ppmtool.repositories.ProjectRepository;
+import com.adam.ppmtool.repositories.ProjectTaskRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,47 +21,55 @@ public class ProjectService {
     private BacklogRepository backlogRepository;
 
     public Project saveOrUpdateProject(Project project){
-
-        try {
+        try{
             project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
 
-            if(project.getId() == null){
+            if(project.getId()==null){
                 Backlog backlog = new Backlog();
                 project.setBacklog(backlog);
                 backlog.setProject(project);
                 backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
             }
 
-            if(project.getId() != null){
+            if(project.getId()!=null){
                 project.setBacklog(backlogRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase()));
             }
 
             return projectRepository.save(project);
+
+        }catch (Exception e){
+            throw new ProjectIdException("Project ID '"+project.getProjectIdentifier().toUpperCase()+"' already exists");
         }
-        catch (Exception e){
-            throw new ProjectIdException("Project ID '"+  project.getProjectIdentifier().toUpperCase()+"' already exists");
-        }
+
     }
+
 
     public Project findProjectByIdentifier(String projectId){
 
         Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
+
         if(project == null){
-            throw  new ProjectIdException("Project ID '"+ projectId.toUpperCase()+"' doesn't exists");
+            throw new ProjectIdException("Project ID '"+projectId+"' does not exist");
+
         }
+
+
         return project;
     }
 
-    public Iterable<Project> findAll() {
+    public Iterable<Project> findAllProjects(){
         return projectRepository.findAll();
     }
 
-    public void deleteProjectByIdentifier(String projectId){
-        Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
+
+    public void deleteProjectByIdentifier(String projectid){
+        Project project = projectRepository.findByProjectIdentifier(projectid.toUpperCase());
+
         if(project == null){
-            throw new ProjectIdException("Cannot delete project with ID '"+projectId.toUpperCase()+"'. The project doesn't exists");
+            throw  new  ProjectIdException("Cannot Project with ID '"+projectid+"'. This project does not exist");
         }
-         projectRepository.delete(project);
+
+        projectRepository.delete(project);
     }
 
 }

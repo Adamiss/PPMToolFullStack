@@ -10,35 +10,48 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectTaskService {
 
+
+    @Autowired
     private BacklogRepository backlogRepository;
 
+    @Autowired
     private ProjectTaskRepository projectTaskRepository;
 
-    public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask){
-        // TODO: Exception: Project NOT FOUND
 
-        // DONE: PTs to be added to a specific project, project !=null, BL exists
+    public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask){
+
+        //Exceptions: Project not found
+
+        //PTs to be added to a specific project, project != null, BL exists
         Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
-        // DONE: set the BL to PT
+        //set the bl to pt
         projectTask.setBacklog(backlog);
-        // DONE: We want our project sequence to be like this: IDPR0-1,  IDPR0-2 ..... IDPR0-1000
+        //we want our project sequence to be like this: IDPRO-1  IDPRO-2  ...100 101
         Integer BacklogSequence = backlog.getPTSequence();
-        // DONE: Update the BL sequence
+        // Update the BL SEQUENCE
         BacklogSequence++;
-        // DONE: Add sequence to Project Task
-        projectTask.setProjectSequence(projectIdentifier + "-" + BacklogSequence);
+
+        backlog.setPTSequence(BacklogSequence);
+
+        //Add Sequence to Project Task
+        projectTask.setProjectSequence(backlog.getProjectIdentifier()+"-"+BacklogSequence);
         projectTask.setProjectIdentifier(projectIdentifier);
-        // DONE: INITIAL priority when priority null
-        if(projectTask.getPriority() == 0 || projectTask.getPriority() == null){
-            projectTask.setPriority(3);
-        }
-        // DONE: INITIAL status when status is null
-        if(projectTask.getStatus() == "" || projectTask.getStatus() == null){
+
+        //INITIAL priority when priority null
+
+        //INITIAL status when status is null
+        if(projectTask.getStatus()==""|| projectTask.getStatus()==null){
             projectTask.setStatus("TO_DO");
         }
 
+        if(projectTask.getPriority()==null){ //In the future we need projectTask.getPriority()== 0 to handle the form
+            projectTask.setPriority(3);
+        }
 
         return projectTaskRepository.save(projectTask);
     }
 
+    public Iterable<ProjectTask>findBacklogById(String id){
+        return projectTaskRepository.findByProjectIdentifierOrderByPriority(id);
+    }
 }

@@ -1,6 +1,7 @@
 package com.adam.ppmtool.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,11 +14,11 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message="Project name is required")
+    @NotBlank(message = "Project name is required")
     private String projectName;
-    @NotBlank(message="Project identifier is required")
-    @Size(min = 4, max = 5, message = "PLease use 4 to 5 characters")
-    @Column(unique = true, updatable = false)
+    @NotBlank(message ="Project Identifier is required")
+    @Size(min=4, max=5, message = "Please use 4 to 5 characters")
+    @Column(updatable = false, unique = true)
     private String projectIdentifier;
     @NotBlank(message = "Project description is required")
     private String description;
@@ -25,7 +26,6 @@ public class Project {
     private Date start_date;
     @JsonFormat(pattern = "yyyy-mm-dd")
     private Date end_date;
-
     @JsonFormat(pattern = "yyyy-mm-dd")
     @Column(updatable = false)
     private Date created_At;
@@ -33,20 +33,18 @@ public class Project {
     private Date updated_At;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
-    //
+    @JsonIgnore
     private Backlog backlog;
 
-    @PrePersist
-    protected void onCreate(){
-        this.created_At = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate(){
-        this.updated_At = new Date();
-    }
-
     public Project() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getProjectName() {
@@ -105,14 +103,6 @@ public class Project {
         this.updated_At = updated_At;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
     public Backlog getBacklog() {
         return backlog;
     }
@@ -120,4 +110,15 @@ public class Project {
     public void setBacklog(Backlog backlog) {
         this.backlog = backlog;
     }
+
+    @PrePersist
+    protected void onCreate(){
+        this.created_At = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        this.updated_At = new Date();
+    }
+
 }

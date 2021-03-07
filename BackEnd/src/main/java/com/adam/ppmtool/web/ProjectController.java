@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-
 @RestController
 @RequestMapping("/api/project")
 @CrossOrigin
@@ -23,6 +22,7 @@ public class ProjectController {
     @Autowired
     private MapValidationErrorService mapValidationErrorService;
 
+
     @PostMapping("")
     public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result){
 
@@ -31,26 +31,26 @@ public class ProjectController {
 
         Project project1 = projectService.saveOrUpdateProject(project);
         return new ResponseEntity<Project>(project1, HttpStatus.CREATED);
-
     }
+
 
     @GetMapping("/{projectId}")
     public ResponseEntity<?> getProjectById(@PathVariable String projectId){
+
         Project project = projectService.findProjectByIdentifier(projectId);
 
-        return  new ResponseEntity<Project>(project, HttpStatus.OK);
+        return new ResponseEntity<Project>(project, HttpStatus.OK);
     }
 
+
     @GetMapping("/all")
-    public Iterable<Project> getAllProjects(){
-        return  projectService.findAll();
-    }
+    public Iterable<Project> getAllProjects(){return projectService.findAllProjects();}
+
 
     @DeleteMapping("/{projectId}")
     public ResponseEntity<?> deleteProject(@PathVariable String projectId){
         projectService.deleteProjectByIdentifier(projectId);
 
-        return new ResponseEntity<String>("Project with ID: '" + projectId +"' was deleted", HttpStatus.OK);
+        return new ResponseEntity<String>("Project with ID: '"+projectId+"' was deleted", HttpStatus.OK);
     }
-
 }
