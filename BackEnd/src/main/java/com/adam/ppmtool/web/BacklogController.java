@@ -2,7 +2,6 @@ package com.adam.ppmtool.web;
 
 import com.adam.ppmtool.domain.ProjectTask;
 import com.adam.ppmtool.services.MapValidationErrorService;
-import com.adam.ppmtool.services.ProjectService;
 import com.adam.ppmtool.services.ProjectTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/backlog")
