@@ -1,6 +1,7 @@
 package com.adam.ppmtool.services;
 
 import com.adam.ppmtool.domain.User;
+import com.adam.ppmtool.exceptions.UsernameAlreadyExistsException;
 import com.adam.ppmtool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,15 +17,22 @@ public class UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public User saveUser(User newUser){
+        try {
+            newUser.setConfirmPassword("");
+            newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+            //Username has to be unique (exception)
+            newUser.setUsername(newUser.getUsername());
 
-        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+            //Make sure that password and confirmPassword match
+            // We don't persist or show the confirmPassword
 
-        //Username has to be unique (exception)
+            return userRepository.save(newUser);
 
-        //Make sure that password and confirmPassword match
-        // We don't persist or show the confirmPassword
+        }catch (Exception e){
+            throw new UsernameAlreadyExistsException("Username '"  + newUser.getUsername() + "' already exists.");
+        }
 
-        return userRepository.save(newUser);
+
     }
 
 }
