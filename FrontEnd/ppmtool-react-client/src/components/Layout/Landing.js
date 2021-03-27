@@ -1,26 +1,27 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 class Landing extends Component {
   render() {
     return (
-      <div classname="landing">
-        <div classname="light-overlay landing-inner text-dark">
-          <div classname="container">
-            <div classname="row">
-              <div classname="col-md-12 text-center">
-                <h1 classname="display-3 mb-4">
+      <div className="landing">
+        <div className="light-overlay landing-inner text-dark">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12 text-center">
+                <h1 className="display-3 mb-4">
                   Personal Project Management Tool
                 </h1>
-                <p classname="lead">
+                <p className="lead">
                   Create your account to join active projects or start your own
                 </p>
                 <hr />
-                <a href="register.html" classname="btn btn-lg btn-primary mr-2">
+                <Link className="btn btn-lg btn-primary mr-2" to="/register">
                   Sign Up
-                </a>
-                <a href="login.html" classname="btn btn-lg btn-secondary mr-2">
+                </Link>
+                <Link className="btn btn-lg btn-secondary mr-2" to="/login">
                   Login
-                </a>
+                </Link>
               </div>
             </div>
           </div>
